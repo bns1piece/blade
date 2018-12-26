@@ -1,34 +1,28 @@
-# blade
+# blade: Front-end Project
 
-## Project setup
-```
-npm install
-```
+넷마블 모바일게임 **블레이드&소울 레볼루션**에서 필드 보스의 등장 시간을 **집단지성**을 이용하여 예측하고 알려주는 보조도구.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## 기능
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### 리젠시간에 따라서 직전 리젠시간, 잡은시간 및 예상 등장시간 표시
+- 채널별 구분
+- 제룡림 10분, 대사막 60분, 수월평원 120분, 백청산맥 180분
+- 자세히 누르면 이전 24시간 히스토리 볼 수 있도록
 
-### Run your tests
-```
-npm run test
-```
+### 리젠시간, 잡은시간 입력할 수 있도록
+- 직전 리젠시간 있으면 다음 리젠 예상시간으로 초기 셋팅으로
+- 직전 리젠시간 없으면 latest 시간 잡아서 그 예상시간으로 초기 세팅
 
-### Lints and fixes files
-```
-npm run lint
-```
+### 현시간 기준으로 보스 나오는 가장 근접한 시간 순서대로 보여주는 화면 하나
 
-### Run your unit tests
-```
-npm run test:unit
-```
+### 24시간 이상 정보 없으면 리젠 시간 미제공
+
+### 모바일 중심
+
+### 안드로이드는 web push로 등장 임박 이전에 알림
+
+- 
+
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
