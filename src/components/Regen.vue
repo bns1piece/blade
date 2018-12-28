@@ -1,0 +1,86 @@
+<template>
+  <v-container fluid grid-list-md class="pa-0">
+    <v-expansion-panel expand>
+      <v-expansion-panel-content
+        v-for="(region, i) in world.regions"
+        :key="i"
+      >
+        <div slot="header">{{ region.name }}</div>
+        <v-data-iterator
+          content-tag="v-layout"
+          :items="region.channels"
+          row
+          wrap
+          hide-actions
+        >
+          <v-flex slot="item" slot-scope="props" xs6 sm4 md4 lg3 xl2>
+            <v-card light>
+              <v-card-title>
+                <h4>{{ props.item.no }}채널</h4>
+                <v-spacer></v-spacer>
+                <span v-if="props.item.prev">{{ props.item.prev }}</span>
+                <span v-else>-</span>
+                <v-spacer></v-spacer>
+                <span v-if="props.item.prev">
+                  {{ nextRegenTime(props.item.prev, props.item.regenTime) }}
+                </span>
+                <span v-else>-</span>
+              </v-card-title>
+              <!--<v-divider></v-divider>-->
+              <!--<v-list v-for="(channel, j) in props.item.channels" :key="j" dense>-->
+                <!--<v-list-tile>-->
+                  <!--<v-list-tile-content>{{channel.no}}채널</v-list-tile-content>-->
+                  <!--<v-list-tile-content v-if="channel.prev">-->
+                    <!--{{channel.prev}}-->
+                  <!--</v-list-tile-content>-->
+                  <!--<v-list-tile-content v-else>-->
+                    <!-- - -->
+                  <!--</v-list-tile-content>-->
+                  <!--<v-list-tile-content v-if="channel.prev" class="font-weight-bold">-->
+                    <!--{{nextRegenTime(channel.prev, channel.regenTime)}}-->
+                  <!--</v-list-tile-content>-->
+                  <!--<v-list-tile-content v-else>-->
+                    <!-- - -->
+                  <!--</v-list-tile-content>-->
+                  <!--<v-icon class="mx-1" small color="primary">edit</v-icon>-->
+                  <!--<v-icon class="mx-1" small color="error">cancel</v-icon>-->
+                <!--</v-list-tile>-->
+              <!--</v-list>-->
+            </v-card>
+          </v-flex>
+        </v-data-iterator>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+    <!--<v-time-picker @input="onPickerInput"></v-time-picker>-->
+  </v-container>
+</template>
+
+<script>
+import moment from 'moment';
+
+export default {
+  name: 'Regen',
+  data() {
+    return {
+      picker: {},
+    };
+  },
+  props: ['world'],
+  methods: {
+    onPickerInput(input) {
+      console.log('input: ', input);
+    },
+    nextRegenTime(prev, regenTime) {
+      return moment()
+        .hour(prev.slice(0, 2))
+        .minute(prev.slice(3, 5))
+        .add(regenTime, 'm')
+        .format('HH:mm');
+    },
+  },
+};
+</script>
+
+<style scoped>
+
+</style>
