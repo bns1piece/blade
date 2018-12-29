@@ -51,6 +51,7 @@ export default {
   async mounted() {
     await this.$store.dispatch('loadServers');
     await this.$store.dispatch('loadWorlds');
+    this.$store.dispatch('loadBossHistories', this.$store.state.servers[0].id);
   },
   data() {
     return {
@@ -74,7 +75,7 @@ export default {
       this.title = newTitle;
     },
     selectWorld(world) {
-      this.selectedWorld = world;
+      this.selectedWorld = { ...world };
       this.changeTitle(world.name);
       this.navigationMenuShowHide();
     },

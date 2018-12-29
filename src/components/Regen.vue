@@ -2,13 +2,13 @@
   <v-container fluid grid-list-md class="pa-0">
     <v-expansion-panel expand>
       <v-expansion-panel-content
-        v-for="field in fields"
+        v-for="field in world.fields"
         :key="field.id"
       >
         <div slot="header">{{ field.name }}</div>
         <v-data-iterator
           content-tag="v-layout"
-          :items="[]"
+          :items="channelBosses(world.id, field.id)"
           row
           wrap
           hide-actions
@@ -16,13 +16,13 @@
           <v-flex slot="item" slot-scope="props" xs6 sm4 md4 lg3 xl2>
             <v-card light>
               <v-card-title>
-                <h4>{{ props.item.no }}채널</h4>
+                <h4>{{ props.item.channel }}채널</h4>
                 <v-spacer></v-spacer>
-                <span v-if="props.item.prev">{{ props.item.prev }}</span>
+                <span v-if="props.item.time">{{ props.item.time }}</span>
                 <span v-else>-</span>
                 <v-spacer></v-spacer>
-                <span v-if="props.item.prev">
-                  {{ nextRegenTime(props.item.prev, props.item.regenTime) }}
+                <span v-if="props.item.time">
+                  {{ nextRegenTime(props.item.time, field.boss) }}
                 </span>
                 <span v-else>-</span>
               </v-card-title>
@@ -66,21 +66,32 @@ export default {
     };
   },
   props: ['world'],
-  computed: {
-    fields() {
-      return this.world.fields;
-    },
-  },
   methods: {
     onPickerInput(input) {
       console.log('input: ', input);
     },
-    nextRegenTime(prev, regenTime) {
+    nextRegenTime(prev, { interval } = {}) {
+      if (!interval) {
+        return '--:--';
+      }
       return moment()
         .hour(prev.slice(0, 2))
         .minute(prev.slice(3, 5))
-        .add(regenTime, 'm')
+        .add(interval, 'm')
         .format('HH:mm');
+    },
+    channelBosses(wid, fid) {
+      const {
+        [wid]: {
+          [fid]: result = {},
+        } = {},
+      } = this.$store.state.bossHistories;
+
+      return Object.keys(result)
+        .map(channel => ({
+          channel,
+          time: result[channel].time,
+        }));
     },
   },
 };
