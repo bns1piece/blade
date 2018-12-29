@@ -2,13 +2,13 @@
   <v-container fluid grid-list-md class="pa-0">
     <v-expansion-panel expand>
       <v-expansion-panel-content
-        v-for="(region, i) in world.regions"
-        :key="i"
+        v-for="field in fields"
+        :key="field.id"
       >
-        <div slot="header">{{ region.name }}</div>
+        <div slot="header">{{ field.name }}</div>
         <v-data-iterator
           content-tag="v-layout"
-          :items="region.channels"
+          :items="[]"
           row
           wrap
           hide-actions
@@ -66,6 +66,11 @@ export default {
     };
   },
   props: ['world'],
+  computed: {
+    fields() {
+      return this.world.fields;
+    },
+  },
   methods: {
     onPickerInput(input) {
       console.log('input: ', input);

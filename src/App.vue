@@ -17,8 +17,8 @@
         <v-divider></v-divider>
 
         <v-list-tile
-          v-for="(world, i) in worlds"
-          :key="i"
+          v-for="world in worlds"
+          :key="world.id"
           @click="selectWorld(world)"
         >
           <v-list-tile-content>
@@ -42,22 +42,29 @@
 
 <script>
 import Regen from './components/Regen.vue';
-import { WORLDS } from './constants/world-info';
 
 export default {
   name: 'App',
   components: {
     Regen,
   },
+  async mounted() {
+    await this.$store.dispatch('loadServers');
+    await this.$store.dispatch('loadWorlds');
+  },
   data() {
     return {
       navigationMenu: {
         show: false,
       },
-      worlds: WORLDS,
-      title: WORLDS[0].name,
-      selectedWorld: WORLDS[0],
+      title: '',
+      selectedWorld: {},
     };
+  },
+  computed: {
+    worlds() {
+      return this.$store.state.worlds;
+    },
   },
   methods: {
     navigationMenuShowHide() {
