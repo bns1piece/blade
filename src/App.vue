@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app>
     <v-navigation-drawer
       v-model="navigationMenu.show"
       app
@@ -10,7 +10,7 @@
         <v-list-tile>
           <v-list-tile-content>
             <v-list-tile-sub-title>블레이드&소울 레볼루션</v-list-tile-sub-title>
-            <v-list-tile-title>필드 보스 타이머</v-list-tile-title>
+            <v-list-tile-title>리젠 타이머</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
 
@@ -58,25 +58,25 @@ export default {
       navigationMenu: {
         show: false,
       },
-      title: '',
-      selectedWorld: {},
     };
   },
   computed: {
     worlds() {
       return this.$store.state.worlds;
     },
+    selectedWorld() {
+      return this.worlds.find(w => w.id === this.$store.state.selectedWorldId) || {};
+    },
+    title() {
+      return this.selectWorld.name || '';
+    },
   },
   methods: {
     navigationMenuShowHide() {
       this.navigationMenu.show = !this.navigationMenu.show;
     },
-    changeTitle(newTitle) {
-      this.title = newTitle;
-    },
     selectWorld(world) {
-      this.selectedWorld = { ...world };
-      this.changeTitle(world.name);
+      this.$store.dispatch('setWorldId', world.id);
       this.navigationMenuShowHide();
     },
   },

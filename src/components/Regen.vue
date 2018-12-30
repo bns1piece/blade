@@ -5,48 +5,23 @@
         v-for="field in world.fields"
         :key="field.id"
       >
-        <div slot="header">{{ field.name }}</div>
+        <div slot="header" class="field-header">
+          <div class="valign-center">{{ field.name }}</div>
+          <div v-if="field.boss" class="field-header-boss">
+            <div>{{ getBossName(field.boss) }}</div>
+            <div>재등장 소요시간 {{ getBossInterval(field.boss) }}분</div>
+          </div>
+        </div>
         <v-data-iterator
           content-tag="v-layout"
-          :items="channelBosses(world.id, field.id)"
+          :items="getChannelBosses(world.id, field.id, field.boss)"
           row
           wrap
           hide-actions
         >
           <v-flex slot="item" slot-scope="props" xs6 sm4 md4 lg3 xl2>
-            <v-card light>
-              <v-card-title>
-                <h4>{{ props.item.channel }}채널</h4>
-                <v-spacer></v-spacer>
-                <span v-if="props.item.time">{{ props.item.time }}</span>
-                <span v-else>-</span>
-                <v-spacer></v-spacer>
-                <span v-if="props.item.time">
-                  {{ nextRegenTime(props.item.time, field.boss) }}
-                </span>
-                <span v-else>-</span>
-              </v-card-title>
-              <!--<v-divider></v-divider>-->
-              <!--<v-list v-for="(channel, j) in props.item.channels" :key="j" dense>-->
-                <!--<v-list-tile>-->
-                  <!--<v-list-tile-content>{{channel.no}}채널</v-list-tile-content>-->
-                  <!--<v-list-tile-content v-if="channel.prev">-->
-                    <!--{{channel.prev}}-->
-                  <!--</v-list-tile-content>-->
-                  <!--<v-list-tile-content v-else>-->
-                    <!-- - -->
-                  <!--</v-list-tile-content>-->
-                  <!--<v-list-tile-content v-if="channel.prev" class="font-weight-bold">-->
-                    <!--{{nextRegenTime(channel.prev, channel.regenTime)}}-->
-                  <!--</v-list-tile-content>-->
-                  <!--<v-list-tile-content v-else>-->
-                    <!-- - -->
-                  <!--</v-list-tile-content>-->
-                  <!--<v-icon class="mx-1" small color="primary">edit</v-icon>-->
-                  <!--<v-icon class="mx-1" small color="error">cancel</v-icon>-->
-                <!--</v-list-tile>-->
-              <!--</v-list>-->
-            </v-card>
+            <regen-detail :boss="props.item">
+            </regen-detail>
           </v-flex>
         </v-data-iterator>
       </v-expansion-panel-content>
@@ -56,10 +31,11 @@
 </template>
 
 <script>
-import moment from 'moment';
+import RegenDetail from './RegenDetail.vue';
 
 export default {
   name: 'Regen',
+  components: { RegenDetail },
   data() {
     return {
       picker: {},
@@ -70,33 +46,52 @@ export default {
     onPickerInput(input) {
       console.log('input: ', input);
     },
-    nextRegenTime(prev, { interval } = {}) {
-      if (!interval) {
-        return '--:--';
+    getChannelBosses(wid, fid, boss) {
+      if (!boss) {
+        return [];
       }
-      return moment()
-        .hour(prev.slice(0, 2))
-        .minute(prev.slice(3, 5))
-        .add(interval, 'm')
-        .format('HH:mm');
-    },
-    channelBosses(wid, fid) {
+
       const {
         [wid]: {
-          [fid]: result = {},
+          [fid]: histories = {},
         } = {},
       } = this.$store.state.bossHistories;
-
-      return Object.keys(result)
+    
+      const result = Object.keys(histories)
         .map(channel => ({
+          wid,
+          fid,
+          ...boss,
           channel,
-          time: result[channel].time,
+          time: histories[channel].time,
         }));
+      result.sort((a, b) => a.channel < b.channel ? -1 : 1);
+      
+      return result;
     },
+    getBossName(boss = {}) {
+      return boss.name || '';
+    },
+    getBossInterval(boss = {}) {
+      return boss.interval || 9999;
+    }
   },
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.valign-center {
+  align-self: center;
+}
 
+.field-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+
+  &-boss {
+    font-size: 11px;
+    text-align: end;
+  }
+}
 </style>

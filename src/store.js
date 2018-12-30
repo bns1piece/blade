@@ -11,6 +11,7 @@ export default new Vuex.Store({
     servers: [],
     worlds: [],
     bossHistories: {},
+    selectedWorldId: localStorage.getItem('selectedWorldId') || '',
   },
   mutations: {
     setServers(state, servers) {
@@ -21,6 +22,9 @@ export default new Vuex.Store({
     },
     setBossHistories(state, bossHistories) {
       state.bossHistories = bossHistories;
+    },
+    setWorldId(state, id) {
+      state.selectedWorldId = id;
     },
   },
   actions: {
@@ -35,6 +39,10 @@ export default new Vuex.Store({
     async loadBossHistories({ commit }, server) {
       const histories = await historiApi.getBossHistories(server);
       commit('setBossHistories', histories);
+    },
+    setWorldId({ commit }, id) {
+      localStorage.setItem('selectedWorldId', id);
+      commit('setWorldId', id);
     },
   },
 });
