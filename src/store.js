@@ -11,7 +11,7 @@ export default new Vuex.Store({
     servers: [],
     worlds: [],
     bossHistories: {},
-    selectedServerId: localStorage.getItem('selectedServerId') || 's1',
+    selectedServerId: localStorage.getItem('selectedServerId') || '',
     selectedWorldId: localStorage.getItem('selectedWorldId') || '',
   },
   mutations: {
@@ -28,7 +28,7 @@ export default new Vuex.Store({
       state.selectedWorldId = id;
     },
     setServerId(state, id) {
-      state.selectedWorldId = id;
+      state.selectedServerId = id;
     },
   },
   actions: {

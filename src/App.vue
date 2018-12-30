@@ -13,9 +13,17 @@
             <v-list-tile-title>리젠 타이머</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-
         <v-divider></v-divider>
-
+        <v-container>
+          <v-select
+            :items="servers"
+            :value="selectedServer.id"
+            item-value="id"
+            item-text="name"
+            label="Select Server"
+            @input="selectServer"
+          ></v-select>
+        </v-container>
         <v-list-tile
           v-for="world in worlds"
           :key="world.id"
@@ -30,12 +38,16 @@
     <v-toolbar app absolute>
       <v-toolbar-side-icon @click.stop="navigationMenuShowHide"></v-toolbar-side-icon>
       <v-toolbar-title class="headline text-uppercase">
-        <span>{{ title }}</span>
+        <span>{{ title }} - {{selectedServer.name}}</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-toolbar-items>
+        
+      </v-toolbar-items>
     </v-toolbar>
     <v-content>
-      <Regen :world="selectedWorld"/>
+      <Regen v-if="selectedServer.id" :world="selectedWorld"/>
+      <div class="not-selected-server" v-else>서버를 선택해야 합니다.</div>
     </v-content>
   </v-app>
 </template>
@@ -61,6 +73,12 @@ export default {
     };
   },
   computed: {
+    servers() {
+      return this.$store.state.servers;
+    },
+    selectedServer() {
+      return this.servers.find(s => s.id === this.$store.state.selectedServerId) || {};
+    },
     worlds() {
       return this.$store.state.worlds;
     },
@@ -79,6 +97,26 @@ export default {
       this.$store.dispatch('setWorldId', world.id);
       this.navigationMenuShowHide();
     },
+    selectServer(serverId) {
+      this.$store.dispatch('setServerId', serverId);
+    },
   },
 };
 </script>
+
+<style scoped>
+.space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.not-selected-server {
+  width: 100%;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-size: 20px;
+}
+</style>
