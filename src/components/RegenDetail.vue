@@ -3,18 +3,18 @@
     <v-card-title>
       <h4>{{ boss.channel }}채널</h4>
       <v-spacer></v-spacer>
-      <span>{{ restMinute }}분 전</span>
+      <span>{{ getRestMinute() }}분 전</span>
       <v-spacer></v-spacer>
-      <span>{{ nextRegenTime }}</span>
+      <span>{{ getNextRegenTime() }}</span>
     </v-card-title>
     <v-card-text>
       <div>
         <span>등장예정</span>
-        <span>{{ nextRegenTime }}</span>
+        <span>{{ getNextRegenTime() }}</span>
       </div>
       <div>
         <span>잡힘</span>
-        <span>{{ boss.time }}</span>
+        <span>{{ deathTime }}</span>
       </div>
     </v-card-text>
   </v-card>
@@ -24,21 +24,23 @@
 import moment from 'moment';
 
 export default {
-  props: ["boss"],
+  props: ['boss'],
   computed: {
-    restMinute() {
-      return moment().diff(moment(this.nextRegenTime, 'HH:mm'), 'minutes');
-    },
-    nextRegenTime() {
-      const { time, interval } = this.boss;
-      return moment()
-        .hour(time.slice(0, 2))
-        .minute(time.slice(3, 5))
-        .add(interval, 'm')
-        .format('HH:mm');
+    deathTime() {
+      return moment(this.boss.time).format('HH:mm');
     },
   },
   methods: {
+    getRestMinute() {
+      const { time, interval } = this.boss;
+      const diffMinutes = moment().diff(moment(time), 'minutes');
+      return diffMinutes % interval;
+    },
+    getNextRegenTime() {
+      return moment()
+        .add(this.getRestMinute(), 'minutes')
+        .format('HH:mm');
+    },
   },
 };
 </script>

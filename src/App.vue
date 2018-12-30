@@ -68,7 +68,7 @@ export default {
       return this.worlds.find(w => w.id === this.$store.state.selectedWorldId) || {};
     },
     title() {
-      return this.selectWorld.name || '';
+      return this.selectedWorld.name || '';
     },
   },
   methods: {

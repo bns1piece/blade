@@ -13,6 +13,7 @@
           </div>
         </div>
         <v-data-iterator
+          v-if="field.boss"
           content-tag="v-layout"
           :items="getChannelBosses(world.id, field.id, field.boss)"
           row
@@ -56,17 +57,16 @@ export default {
           [fid]: histories = {},
         } = {},
       } = this.$store.state.bossHistories;
-    
+
       const result = Object.keys(histories)
         .map(channel => ({
           wid,
           fid,
           ...boss,
           channel,
-          time: histories[channel].time,
+          ...histories[channel].boss,
         }));
-      result.sort((a, b) => a.channel < b.channel ? -1 : 1);
-      
+      result.sort((a, b) => (a.channel < b.channel ? -1 : 1));
       return result;
     },
     getBossName(boss = {}) {
@@ -74,7 +74,7 @@ export default {
     },
     getBossInterval(boss = {}) {
       return boss.interval || 9999;
-    }
+    },
   },
 };
 </script>
