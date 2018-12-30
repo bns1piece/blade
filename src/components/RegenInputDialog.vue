@@ -36,7 +36,7 @@
             <v-time-picker full-width v-model="time"></v-time-picker>
         </v-card-text>
     </v-card>
-    </v-dialog>
+  </v-dialog>
 </template>
 
 <script>

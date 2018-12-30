@@ -28,6 +28,10 @@
               </regen-detail>
             </v-flex>
           </v-data-iterator>
+          <v-btn block round color="blue white--text" 
+            @click="() => addChannel(world.id, field)">
+            <v-icon>add</v-icon>
+          </v-btn>
         </v-container>
       </v-expansion-panel-content>
     </v-expansion-panel>
@@ -37,21 +41,30 @@
       @close="showInputForm = false"
       @save="onSave"
       />
+    <SelectionBlockDialog 
+      v-model="showSelectChannelDialog" 
+      :items="availableChannels"
+      @select="onSelectChannel"
+      />
   </v-container>
 </template>
 
 <script>
 import RegenDetail from './RegenDetail.vue';
 import RegenInputDialog from './RegenInputDialog.vue';
+import SelectionBlockDialog from './SelectionBlockDialog.vue';
 
 export default {
   name: 'Regen',
-  components: { RegenDetail, RegenInputDialog },
+  components: { RegenDetail, RegenInputDialog, SelectionBlockDialog },
   data() {
     return {
       picker: {},
       showInputForm: false,
       regenPlace: {},
+      showSelectChannelDialog: false,
+      availableChannels: [],
+      infoForChannel: {},
     };
   },
   props: ['world'],
@@ -94,6 +107,30 @@ export default {
     onSave(data) {
       this.$store.dispatch('saveRegenInfo', data);
       this.showInputForm = false;
+    },
+    addChannel(wid, field) {
+      const { id: fid } = field;
+      const {
+        [wid]: {
+          [fid]: channels = {},
+        } = {},
+      } = this.$store.state.bossHistories;
+
+      this.infoForChannel = { wid, field };
+      this.availableChannels = Array(9)
+        .fill(0)
+        .map((v, i) => String(i + 1))
+        .filter(n => !channels[n])
+        .map(n => ({ value: n, text: n }));
+      this.showSelectChannelDialog = true;
+    },
+    onSelectChannel(channel) {
+      if (!channel) {
+        return;
+      }
+
+      const { wid, field } = this.infoForChannel;
+      this.onClickRegenTime(wid, field, channel);
     },
   },
 };
