@@ -11,6 +11,7 @@ export default new Vuex.Store({
     servers: [],
     worlds: [],
     bossHistories: {},
+    selectedServerId: localStorage.getItem('selectedServerId') || 's1',
     selectedWorldId: localStorage.getItem('selectedWorldId') || '',
   },
   mutations: {
@@ -26,6 +27,9 @@ export default new Vuex.Store({
     setWorldId(state, id) {
       state.selectedWorldId = id;
     },
+    setServerId(state, id) {
+      state.selectedWorldId = id;
+    },
   },
   actions: {
     async loadServers({ commit }) {
@@ -36,13 +40,22 @@ export default new Vuex.Store({
       const list = await infoApi.getWorlds();
       commit('setWorlds', list);
     },
-    async loadBossHistories({ commit }, server) {
-      const histories = await historiApi.getBossHistories(server);
+    async loadBossHistories({ commit }, serverId) {
+      const histories = await historiApi.getBossHistories(serverId);
       commit('setBossHistories', histories);
+    },
+    setServerId({ commit }, id) {
+      localStorage.setItem('selectedServerId', id);
+      commit('setServerId', id);
     },
     setWorldId({ commit }, id) {
       localStorage.setItem('selectedWorldId', id);
       commit('setWorldId', id);
+    },
+    async saveRegenInfo({ dispatch, state }, info) {
+      const serverId = state.selectedServerId;
+      await historiApi.saveBossRegenInfo({ sid: serverId, ...info });
+      dispatch('loadBossHistories', state.selectedServerId);
     },
   },
 });

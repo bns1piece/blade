@@ -34,7 +34,9 @@
     <RegenInputDialog 
       v-model="showInputForm" 
       :place="regenPlace" 
-      @close="showInputForm = false"/>
+      @close="showInputForm = false"
+      @save="onSave"
+      />
   </v-container>
 </template>
 
@@ -88,6 +90,10 @@ export default {
         channel,
       };
       this.showInputForm = true;
+    },
+    onSave(data) {
+      this.$store.dispatch('saveRegenInfo', data);
+      this.showInputForm = false;
     },
   },
 };

@@ -5,10 +5,9 @@
     fullscreen
     hide-overlay
     transition="dialog-bottom-transition"
-    scrollable
-    >
+    scrollable>
     <v-card tile>
-        <v-toolbar class="toolbar" flat>
+    <v-toolbar class="toolbar" flat>
             <v-btn icon @click="() => onInput(false)">
                 <v-icon>close</v-icon>
             </v-btn>
@@ -16,7 +15,7 @@
             <v-btn 
                 small 
                 color="blue lighten-1 white--text" 
-                @click="() => onInput(false)">
+                @click="onSave">
                 Save
             </v-btn>
         </v-toolbar>
@@ -64,6 +63,19 @@ export default {
     methods: {
         onInput(...args) {
             this.$emit('input', ...args);
+        },
+        onSave() {
+            const { wid, fid, channel } = this.place;
+            let time = moment(this.time, 'HH:mm');
+            if (moment().diff(time) < 0) {
+                time = time.subtract(1, 'days');
+            }
+            this.$emit('save', {
+                wid,
+                fid,
+                channel,
+                time: time.valueOf(),
+            });
         },
     },
 };
