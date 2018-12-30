@@ -12,42 +12,49 @@
             <div>재등장 소요시간 {{ getBossInterval(field.boss) }}분</div>
           </div>
         </div>
-        <v-data-iterator
-          v-if="field.boss"
-          content-tag="v-layout"
-          :items="getChannelBosses(world.id, field.id, field.boss)"
-          row
-          wrap
-          hide-actions
-        >
-          <v-flex slot="item" slot-scope="props" xs6 sm4 md4 lg3 xl2>
-            <regen-detail :boss="props.item">
-            </regen-detail>
-          </v-flex>
-        </v-data-iterator>
+        <v-container fluid grid-list-md class="channels-container">
+          <v-data-iterator
+            v-if="field.boss"
+            content-tag="v-layout"
+            :items="getChannelBosses(world.id, field)"
+            row
+            wrap
+            hide-actions
+          >
+            <v-flex slot="item" slot-scope="props" xs6 sm4 md4 lg3 xl2>
+              <regen-detail 
+                :boss="props.item" 
+                @clickAdd="(channel) => onClickRegenTime(world.id, field, props.item.channel)">
+              </regen-detail>
+            </v-flex>
+          </v-data-iterator>
+        </v-container>
       </v-expansion-panel-content>
     </v-expansion-panel>
-    <!--<v-time-picker @input="onPickerInput"></v-time-picker>-->
+    <RegenInputDialog 
+      v-model="showInputForm" 
+      :place="regenPlace" 
+      @close="showInputForm = false"/>
   </v-container>
 </template>
 
 <script>
 import RegenDetail from './RegenDetail.vue';
+import RegenInputDialog from './RegenInputDialog.vue';
 
 export default {
   name: 'Regen',
-  components: { RegenDetail },
+  components: { RegenDetail, RegenInputDialog },
   data() {
     return {
       picker: {},
+      showInputForm: false,
+      regenPlace: {},
     };
   },
   props: ['world'],
   methods: {
-    onPickerInput(input) {
-      console.log('input: ', input);
-    },
-    getChannelBosses(wid, fid, boss) {
+    getChannelBosses(wid, { id: fid, boss }) {
       if (!boss) {
         return [];
       }
@@ -60,11 +67,9 @@ export default {
 
       const result = Object.keys(histories)
         .map(channel => ({
-          wid,
-          fid,
-          ...boss,
           channel,
-          ...histories[channel].boss,
+          interval: boss.interval,
+          time: histories[channel].boss.time,
         }));
       result.sort((a, b) => (a.channel < b.channel ? -1 : 1));
       return result;
@@ -74,6 +79,15 @@ export default {
     },
     getBossInterval(boss = {}) {
       return boss.interval || 9999;
+    },
+    onClickRegenTime(wid, field, channel) {
+      this.regenPlace = {
+        wid,
+        fid: field.id,
+        fieldName: field.name,
+        channel,
+      };
+      this.showInputForm = true;
     },
   },
 };
@@ -93,5 +107,9 @@ export default {
     font-size: 11px;
     text-align: end;
   }
+}
+
+.channels-container {
+  background-color: #ebebeb;  
 }
 </style>
