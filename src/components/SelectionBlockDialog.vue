@@ -29,13 +29,16 @@ export default {
   computed: {
   },
   methods: {
-      onInput(...args) {
-        this.$emit('input', ...args);
-      },
-      onSelect() {
-        this.$emit('select', this.selectedItem);
-        this.onInput(false);
-      },
+    onInput(...args) {
+      this.$emit('input', ...args);
+    },
+    onSelect() {
+      this.$emit('select', this.selectedItem);
+      this.onInput(false);
+    },
+    track() {
+      this.$ga.page('/');
+    },
   },
 };
 </script>

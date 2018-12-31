@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title class="space-between">
       <h4 class="title-channel">{{ boss.channel }}채널</h4>
-      <span 
+      <span
         :class="['title-rest-time', getRestMinute() <= 5 ? 'impending-time' : '']">
         {{ getRestMinute() }}분 전
       </span>
@@ -51,6 +51,9 @@ export default {
     },
     onClickAdd() {
       this.$emit('clickAdd');
+    },
+    track() {
+      this.$ga.page('/');
     },
   },
 };

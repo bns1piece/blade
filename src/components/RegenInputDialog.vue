@@ -12,9 +12,9 @@
                 <v-icon>close</v-icon>
             </v-btn>
             <v-toolbar-title class="toolbar--text">잡은 시간 입력</v-toolbar-title>
-            <v-btn 
-                small 
-                color="blue lighten-1 white--text" 
+            <v-btn
+                small
+                color="blue lighten-1 white--text"
                 @click="onSave">
                 Save
             </v-btn>
@@ -43,41 +43,44 @@
 import moment from 'moment';
 
 export default {
-    props: ['value', 'place'],
-    mounted() {
-        this.time = moment().format('HH:mm');
+  props: ['value', 'place'],
+  mounted() {
+    this.time = moment().format('HH:mm');
+  },
+  data() {
+    return {
+        time: null,
+    };
+  },
+  computed: {
+    fieldName() {
+        return this.place.fieldName;
     },
-    data() {
-        return {
-            time: null,
-        };
+    channel() {
+        return this.place.channel;
     },
-    computed: {
-        fieldName() {
-            return this.place.fieldName;
-        },
-        channel() {
-            return this.place.channel;
-        },
+  },
+  methods: {
+    onInput(...args) {
+        this.$emit('input', ...args);
     },
-    methods: {
-        onInput(...args) {
-            this.$emit('input', ...args);
-        },
-        onSave() {
-            const { wid, fid, channel } = this.place;
-            let time = moment(this.time, 'HH:mm');
-            if (moment().diff(time) < 0) {
-                time = time.subtract(1, 'days');
-            }
-            this.$emit('save', {
-                wid,
-                fid,
-                channel,
-                time: time.valueOf(),
-            });
-        },
+    onSave() {
+        const { wid, fid, channel } = this.place;
+        let time = moment(this.time, 'HH:mm');
+        if (moment().diff(time) < 0) {
+            time = time.subtract(1, 'days');
+        }
+        this.$emit('save', {
+            wid,
+            fid,
+            channel,
+            time: time.valueOf(),
+        });
     },
+    track() {
+      this.$ga.page('/');
+    },
+  },
 };
 </script>
 
@@ -86,7 +89,7 @@ export default {
     height: 60px;
     background-color: white;
 
-    &--text {    
+    &--text {
         width: 100%;
         text-align: center;
         padding-right: 56px;

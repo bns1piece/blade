@@ -42,7 +42,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        
+
       </v-toolbar-items>
     </v-toolbar>
     <v-content>
@@ -99,6 +99,9 @@ export default {
     },
     selectServer(serverId) {
       this.$store.dispatch('setServerId', serverId);
+    },
+    track() {
+      this.$ga.page('/');
     },
   },
 };

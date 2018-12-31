@@ -22,27 +22,27 @@
             hide-actions
           >
             <v-flex slot="item" slot-scope="props" xs6 sm4 md4 lg3 xl2>
-              <regen-detail 
-                :boss="props.item" 
+              <regen-detail
+                :boss="props.item"
                 @clickAdd="(channel) => onClickRegenTime(world.id, field, props.item.channel)">
               </regen-detail>
             </v-flex>
           </v-data-iterator>
-          <v-btn block round color="blue white--text" 
+          <v-btn block round color="blue white--text"
             @click="() => addChannel(world.id, field)">
             <v-icon>add</v-icon>
           </v-btn>
         </v-container>
       </v-expansion-panel-content>
     </v-expansion-panel>
-    <RegenInputDialog 
-      v-model="showInputForm" 
-      :place="regenPlace" 
+    <RegenInputDialog
+      v-model="showInputForm"
+      :place="regenPlace"
       @close="showInputForm = false"
       @save="onSave"
       />
-    <SelectionBlockDialog 
-      v-model="showSelectChannelDialog" 
+    <SelectionBlockDialog
+      v-model="showSelectChannelDialog"
       :items="availableChannels"
       @select="onSelectChannel"
       />
@@ -132,6 +132,9 @@ export default {
       const { wid, field } = this.infoForChannel;
       this.onClickRegenTime(wid, field, channel);
     },
+    track() {
+      this.$ga.page('/');
+    },
   },
 };
 </script>
@@ -153,6 +156,6 @@ export default {
 }
 
 .channels-container {
-  background-color: #ebebeb;  
+  background-color: #ebebeb;
 }
 </style>
