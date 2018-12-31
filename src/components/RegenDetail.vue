@@ -7,7 +7,7 @@
         {{ getRestMinute() }}분 전
       </span>
     </v-card-title>
-    <v-divider />
+    <v-divider></v-divider>
     <v-card-text>
       <div class="space-between">
         <span class="sub-label">등장예정</span>
@@ -15,7 +15,7 @@
       </div>
       <div class="space-between">
         <span></span>
-        <span>up-icon</span>
+        <v-icon class="mr-2">arrow_upward</v-icon>
       </div>
       <div class="space-between">
         <span class="sub-label">잡힘</span>
