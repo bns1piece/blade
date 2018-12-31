@@ -53,9 +53,10 @@ export default new Vuex.Store({
       commit('setServerId', id);
       dispatch('loadBossHistories');
     },
-    setWorldId({ commit }, id) {
+    setWorldId({ commit, dispatch }, id) {
       localStorage.setItem('selectedWorldId', id);
       commit('setWorldId', id);
+      dispatch('loadBossHistories');
     },
     async saveRegenInfo({ dispatch, state }, info) {
       const { selectedServerId: sid, selectedWorldId: wid } = state;
