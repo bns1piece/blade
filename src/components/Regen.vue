@@ -16,7 +16,7 @@
           <v-data-iterator
             v-if="field.boss"
             content-tag="v-layout"
-            :items="getChannelBosses(world.id, field)"
+            :items="getChannelBosses(field)"
             row
             wrap
             hide-actions
@@ -24,12 +24,12 @@
             <v-flex slot="item" slot-scope="props" xs6 sm4 md4 lg3 xl2>
               <regen-detail
                 :boss="props.item"
-                @clickAdd="onClickRegenTime(world.id, field, props.item.channel)">
+                @clickAdd="onClickRegenTime(field, props.item.channel)">
               </regen-detail>
             </v-flex>
           </v-data-iterator>
           <v-btn block round color="blue white--text"
-            @click="() => addChannel(world.id, field)">
+            @click="() => addChannel(field)">
             <v-icon>add</v-icon>
           </v-btn>
         </v-container>
@@ -70,15 +70,13 @@ export default {
   },
   props: ['world'],
   methods: {
-    getChannelBosses(wid, { id: fid, boss }) {
+    getChannelBosses({ id: fid, boss }) {
       if (!boss) {
         return [];
       }
 
       const {
-        [wid]: {
-          [fid]: histories = {},
-        } = {},
+        [fid]: histories = {},
       } = this.$store.state.bossHistories;
 
       const result = Object.keys(histories)
@@ -96,9 +94,8 @@ export default {
     getBossInterval(boss = {}) {
       return boss.interval || 9999;
     },
-    onClickRegenTime(wid, field, channel) {
+    onClickRegenTime(field, channel) {
       this.regenPlace = {
-        wid,
         fid: field.id,
         fieldName: field.name,
         channel,
@@ -109,15 +106,13 @@ export default {
       this.$store.dispatch('saveRegenInfo', data);
       this.showInputForm = false;
     },
-    addChannel(wid, field) {
+    addChannel(field) {
       const { id: fid } = field;
       const {
-        [wid]: {
-          [fid]: channels = {},
-        } = {},
+        [fid]: channels = {},
       } = this.$store.state.bossHistories;
 
-      this.infoForChannel = { wid, field };
+      this.infoForChannel = { field };
       this.availableChannels = Array(9)
         .fill(0)
         .map((v, i) => String(i + 1))
@@ -130,8 +125,8 @@ export default {
         return;
       }
 
-      const { wid, field } = this.infoForChannel;
-      this.onClickRegenTime(wid, field, channel);
+      const { field } = this.infoForChannel;
+      this.onClickRegenTime(field, channel);
     },
     track() {
       this.$ga.page('/');

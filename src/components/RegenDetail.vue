@@ -41,8 +41,9 @@ export default {
   methods: {
     getRestMinute() {
       const { time, interval } = this.boss;
-      const diffMinutes = moment().diff(moment(time), 'minutes');
-      return diffMinutes % interval;
+      let diffMinutes = moment().diff(moment(time), 'minutes');
+      diffMinutes %= interval;
+      return interval - diffMinutes;
     },
     getNextRegenTime() {
       return moment()

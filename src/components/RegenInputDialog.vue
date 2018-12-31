@@ -19,7 +19,7 @@
                 Save
             </v-btn>
         </v-toolbar>
-        <v-divider />
+        <v-divider></v-divider>
         <v-card-text>
             <v-list>
                 <v-list-tile style="height: 50px;">
@@ -65,13 +65,12 @@ export default {
         this.$emit('input', ...args);
     },
     onSave() {
-        const { wid, fid, channel } = this.place;
+        const { fid, channel } = this.place;
         let time = moment(this.time, 'HH:mm');
         if (moment().diff(time) < 0) {
             time = time.subtract(1, 'days');
         }
         this.$emit('save', {
-            wid,
             fid,
             channel,
             time: time.valueOf(),

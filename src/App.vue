@@ -57,7 +57,7 @@ export default {
   async mounted() {
     await this.$store.dispatch('loadServers');
     await this.$store.dispatch('loadWorlds');
-    this.$store.dispatch('loadBossHistories', this.$store.state.servers[0].id);
+    this.$store.dispatch('loadBossHistories');
   },
   data() {
     return {

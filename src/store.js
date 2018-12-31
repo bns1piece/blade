@@ -40,22 +40,27 @@ export default new Vuex.Store({
       const list = await infoApi.getWorlds();
       commit('setWorlds', list);
     },
-    async loadBossHistories({ commit }, serverId) {
-      const histories = await historiApi.getBossHistories(serverId);
+    async loadBossHistories({ commit, state }) {
+      const { selectedServerId: sid, selectedWorldId: wid } = state;
+      if (!sid || !wid) {
+        return;
+      }
+      const histories = await historiApi.getBossHistories(sid, wid);
       commit('setBossHistories', histories);
     },
-    setServerId({ commit }, id) {
+    setServerId({ commit, dispatch }, id) {
       localStorage.setItem('selectedServerId', id);
       commit('setServerId', id);
+      dispatch('loadBossHistories');
     },
     setWorldId({ commit }, id) {
       localStorage.setItem('selectedWorldId', id);
       commit('setWorldId', id);
     },
     async saveRegenInfo({ dispatch, state }, info) {
-      const serverId = state.selectedServerId;
-      await historiApi.saveBossRegenInfo({ sid: serverId, ...info });
-      dispatch('loadBossHistories', state.selectedServerId);
+      const { selectedServerId: sid, selectedWorldId: wid } = state;
+      await historiApi.saveBossRegenInfo({ sid, wid, ...info });
+      dispatch('loadBossHistories');
     },
   },
 });
