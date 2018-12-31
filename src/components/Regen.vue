@@ -1,15 +1,15 @@
 <template>
   <v-container fluid grid-list-md class="pa-0">
-    <v-expansion-panel expand>
+    <v-expansion-panel expand v-model="panel">
       <v-expansion-panel-content
         v-for="field in world.fields"
         :key="field.id"
       >
         <div slot="header" class="field-header">
-          <div class="valign-center">{{ field.name }}</div>
+          <div class="valign-center subheading font-weight-bold">{{ field.name }}</div>
           <div v-if="field.boss" class="field-header-boss">
-            <div>{{ getBossName(field.boss) }}</div>
-            <div>재등장 소요시간 {{ getBossInterval(field.boss) }}분</div>
+            <div class="body-2 font-weight-bold grey--text">{{ getBossName(field.boss) }}</div>
+            <div class="body-1 grey--text">재등장 소요시간 {{ getBossInterval(field.boss) }}분</div>
           </div>
         </div>
         <v-container fluid grid-list-md class="channels-container">
@@ -24,7 +24,7 @@
             <v-flex slot="item" slot-scope="props" xs6 sm4 md4 lg3 xl2>
               <regen-detail
                 :boss="props.item"
-                @clickAdd="(channel) => onClickRegenTime(world.id, field, props.item.channel)">
+                @clickAdd="onClickRegenTime(world.id, field, props.item.channel)">
               </regen-detail>
             </v-flex>
           </v-data-iterator>
@@ -65,6 +65,7 @@ export default {
       showSelectChannelDialog: false,
       availableChannels: [],
       infoForChannel: {},
+      panel: [], // just for collapse all panel when selected another world.
     };
   },
   props: ['world'],
@@ -134,6 +135,16 @@ export default {
     },
     track() {
       this.$ga.page('/');
+    },
+    collapseAll() {
+      this.panel = [];
+    },
+  },
+  watch: {
+    world(newValue, oldValue) {
+      if (newValue.id !== oldValue.id) {
+        this.collapseAll();
+      }
     },
   },
 };
