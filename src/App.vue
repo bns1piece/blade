@@ -6,14 +6,12 @@
       absolute
       overflow
     >
+      <v-container>
+        <div class="grey--text text--darken-1 font-weight-bold mb-2">블레이드&소울 레볼루션</div>
+        <div class="grey--text text--darken-1 display-2">리젠 타이머</div>
+      </v-container>
+      <v-divider></v-divider>
       <v-list class="pa-0">
-        <v-list-tile>
-          <v-list-tile-content>
-            <v-list-tile-sub-title>블레이드&소울 레볼루션</v-list-tile-sub-title>
-            <v-list-tile-title>리젠 타이머</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <v-divider></v-divider>
         <v-container>
           <v-select
             :items="servers"
@@ -40,10 +38,6 @@
       <v-toolbar-title class="headline text-uppercase">
         <span>{{ title }} - {{selectedServer.name}}</span>
       </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-toolbar-items>
-
-      </v-toolbar-items>
     </v-toolbar>
     <v-content>
       <Regen v-if="selectedServer.id" :world="selectedWorld"/>
@@ -108,11 +102,6 @@ export default {
 </script>
 
 <style scoped>
-.space-between {
-  display: flex;
-  justify-content: space-between;
-}
-
 .not-selected-server {
   width: 100%;
   height: 200px;
