@@ -13,14 +13,12 @@
       <v-divider></v-divider>
       <v-list class="pa-0">
         <v-container>
-          <v-select
+          <v-combobox
             :items="servers"
-            :value="selectedServer.id"
-            item-value="id"
             item-text="name"
             label="Select Server"
             @input="selectServer"
-          ></v-select>
+          ></v-combobox>
         </v-container>
         <v-list-tile
           v-for="world in worlds"
@@ -91,8 +89,8 @@ export default {
       this.$store.dispatch('setWorldId', world.id);
       this.navigationMenuShowHide();
     },
-    selectServer(serverId) {
-      this.$store.dispatch('setServerId', serverId);
+    selectServer(server) {
+      this.$store.dispatch('setServerId', server.id);
     },
     track() {
       this.$ga.page('/');
