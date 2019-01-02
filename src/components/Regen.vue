@@ -20,6 +20,7 @@
             row
             wrap
             hide-actions
+            no-data-text="등록된 채널이 아직 없어요."
           >
             <v-flex slot="item" slot-scope="props" xs6 sm4 md4 lg3 xl2>
               <regen-detail

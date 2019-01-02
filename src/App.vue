@@ -14,6 +14,7 @@
       <v-list class="pa-0">
         <v-container>
           <v-combobox
+            :value="selectedServer"
             :items="servers"
             item-text="name"
             label="Select Server"
