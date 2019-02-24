@@ -70,7 +70,7 @@ export default {
       return this.$store.state.servers;
     },
     selectedServer() {
-      return this.servers.find(s => s.id === this.$store.state.selectedServerId) || {};
+      return this.servers.find(s => s.id === this.$store.state.selectedServerId) || '서버 선택';
     },
     worlds() {
       return this.$store.state.worlds;
