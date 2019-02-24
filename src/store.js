@@ -13,6 +13,7 @@ export default new Vuex.Store({
     bossHistories: {},
     selectedServerId: localStorage.getItem('selectedServerId') || '',
     selectedWorldId: localStorage.getItem('selectedWorldId') || '',
+    updated: true,
   },
   mutations: {
     setServers(state, servers) {
@@ -29,6 +30,9 @@ export default new Vuex.Store({
     },
     setServerId(state, id) {
       state.selectedServerId = id;
+    },
+    setUpdated(state, updated) {
+      state.updated = updated;
     },
   },
   actions: {
@@ -62,6 +66,9 @@ export default new Vuex.Store({
       const { selectedServerId: sid, selectedWorldId: wid } = state;
       await historiApi.saveBossRegenInfo({ sid, wid, ...info });
       dispatch('loadBossHistories');
+    },
+    setUpdated({ commit }, updated) {
+      commit('setUpdated', updated);
     },
   },
 });
